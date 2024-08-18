@@ -28,28 +28,28 @@ def serialize_tag(tag):
     }
 
 
-def get_likes_count(post):
-    return post.likes.count()
-
-
 def index(request):
-    all_posts = Post.objects.all()
-
-    most_popular_posts = sorted(all_posts, key=get_likes_count, reverse=True)[:5]
-
-    fresh_posts = Post.objects.order_by('published_at')[:5]
-    # most_fresh_posts = list(fresh_posts)[-5:]
-
-    tags = Tag.objects.all()
-    popular_tags = sorted(tags, key=lambda tag: tag.posts.count(), reverse=True)[:5]
-    # most_popular_tags = popular_tags[-5:]
-
+    # Предзагрузка авторов для минимизации запросов
+    most_popular_posts = Post.objects.annotate(
+        likes_count=Count('likes')
+    ).order_by('-likes_count').prefetch_related('author')[:5]
+    
+    fresh_posts = Post.objects.order_by(
+        '-published_at'
+    ).prefetch_related('author')[:5]
+    
+    popular_tags = Tag.objects.annotate(
+        posts_count=Count('posts')
+    ).order_by('-posts_count')[:5]
+    
     context = {
         'most_popular_posts': [serialize_post(post) for post in most_popular_posts],
         'page_posts': [serialize_post(post) for post in fresh_posts],
         'popular_tags': [serialize_tag(tag) for tag in popular_tags],
     }
+    
     return render(request, 'index.html', context)
+
 
 
 def post_detail(request, slug):
