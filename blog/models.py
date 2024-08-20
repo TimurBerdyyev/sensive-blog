@@ -59,12 +59,13 @@ class Comment(models.Model):
     post = models.ForeignKey(
         'Post',
         on_delete=models.CASCADE,
+        related_name='comments',
         verbose_name='Пост, к которому написан')
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='author',
         verbose_name='Автор')
-
     text = models.TextField('Текст комментария')
     published_at = models.DateTimeField('Дата и время публикации')
 
