@@ -4,12 +4,7 @@ from environs import Env
 env = Env()
 env.read_env()
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
 
@@ -24,7 +19,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'debug_toolbar',
     'blog',
 ]
@@ -38,11 +32,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 ROOT_URLCONF = 'sensive_blog.urls'
 
@@ -107,3 +97,7 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
